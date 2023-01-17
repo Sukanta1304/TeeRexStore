@@ -23,7 +23,7 @@ TeeRexStore React Assignment at GeekTrust Platform
  * Filter can be applied by itself or on top of the search results. 
  * The mockup provided is only a sample so that you have an indication of what is expected from you. You could choose to go with a completely different user experience. But you will need to ensure that all requirements mentioned in the problem are covered & there should be navigation between screens. 
  * All features (search, filter, add to cart etc) should be handled on the client side.
- * You can you either json file or the api- https://geektrust.s3.ap-southeast-1.amazonaws.com/coding-problems/shopping-cart/catalogue.json
+ * You can use either json file or the api- https://geektrust.s3.ap-southeast-1.amazonaws.com/coding-problems/shopping-cart/catalogue.json
 
 #### Run the project Locally
 

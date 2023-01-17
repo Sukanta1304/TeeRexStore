@@ -12,7 +12,8 @@ function ProductCard({el}) {
       imageURL,
       name,
       price,
-      quantity:1
+      quantity:1,
+      availableqty: el.quantity
     }
     // console.log(product);
     const Exist = product?.filter((prod)=> prod.id===el.id);

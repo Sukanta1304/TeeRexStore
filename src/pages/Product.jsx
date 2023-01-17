@@ -4,42 +4,82 @@ import {AiOutlineSearch} from 'react-icons/ai';
 import {TbFilter} from 'react-icons/tb'
 import ProductCard from '../components/ProductCard';
 import { CartContext } from '../context/CartContext';
+import { freeTextSerach, getAlldata } from '../lib/helper';
 import Style from '../styles/product.module.css';
 
 
 function Product() {
-    const {product,setProduct}= useContext(CartContext)
+
     const [data, setData] = useState([]);
+    const [filterData, setFilterData] = useState([]);
     const [query, setQuery] = useState("");
-    const [color, setColor] = useState("")
 
     useEffect(() => {
-        fetch(`https://geektrust.s3.ap-southeast-1.amazonaws.com/coding-problems/shopping-cart/catalogue.json`)
-        .then((res)=> res.json())
-        .then((res)=>{
-            console.log(res);
-            setData(res)
-        })
-        .catch((err)=>{
-            console.log(err);
-        })
+        getAlldata().then(res=>{setData(res);setFilterData(res)});
     }, []);
 
-    const handleSearch=()=>{
-        console.log(query);
-        const searchData = data.filter((el)=>
-        el.name=== query || el.color=== query ||
-        el.type==query
-        )
+    // Search by Search Field
 
-        console.log(searchData);
-        setData(searchData);
-        setQuery("")
+    const handleSearch=()=>{
+       let result= freeTextSerach(data,query);
+       setData(result)
     }
+
+// filter by color 
+
 const handleColorChange=(e)=>{
-    setColor(e.target.value);
-    // const updatedData=data.filter((item)=> item.color===color);
-    // setData(updatedData)
+
+    const {checked,value}= e.target;
+
+    if(checked){
+        const match= data.filter((el)=>el.color===value);
+        setData(match)
+    }else{
+        setData(filterData);
+    }
+}
+
+// Filter By Gender
+
+const handleFilterGender=(e)=>{
+    const {checked,value}= e.target;
+
+    if(checked){
+        const match= data.filter((el)=>el.gender===value);
+        setData(match)
+    }else{
+        setData(filterData);
+    }
+}
+
+// Filter by Price
+
+const FilterByPrice=(e)=>{
+    const {checked,value}= e.target;
+    if(checked){
+        let prices= value.trim().split("-");
+        if(prices.length>1){
+            let match= data.filter((el)=> el.price>=prices[0] && el.price<=prices[1]);
+            setData(match)
+        }else{
+            let match = data.filter((el)=> el.price>=401);
+            setData(match)
+        }
+    }else{
+        setData(filterData)
+    }
+}
+
+// Filter By Type
+
+const FilterByType=(e)=>{
+    const {checked,value}= e.target;
+    if(checked){
+        let match= data.filter((el)=>el.type===value);
+        setData(match)
+    }else{
+        setData(filterData)
+    }
 }
 
   return (
@@ -64,25 +104,25 @@ const handleColorChange=(e)=>{
             </div>
             <div>
                 <h3>Gender</h3>
-                <input type="checkbox" /> <span>Men</span>
+                <input type="checkbox" value="Men" onChange={handleFilterGender} /> <span>Men</span>
                 <br />
-                <input type="checkbox" /> <span>Women</span>
+                <input type="checkbox" value="Women" onChange={handleFilterGender}/> <span>Women</span>
             </div>
             <div>
                 <h3>Price</h3>
-                <input type="checkbox" /> <span>0 - Rs250</span>
+                <input type="checkbox"  value='0-250' onChange={FilterByPrice}/> <span>0 - Rs250</span>
                 <br />
-                <input type="checkbox" /> <span>Rs251 - Rs400</span>
+                <input type="checkbox" value='251-400' onChange={FilterByPrice}/> <span>Rs251 - Rs400</span>
                 <br />
-                <input type="checkbox" /> <span>Rs450</span>
+                <input type="checkbox" value='450' onChange={FilterByPrice}/> <span>Rs450</span>
             </div>
             <div>
                 <h3>Type</h3>
-                <input type="checkbox" /> <span>Polo</span>
+                <input type="checkbox" value='Polo' onChange={FilterByType}/> <span>Polo</span>
                 <br />
-                <input type="checkbox" /> <span>Hoodie</span>
+                <input type="checkbox" value='Hoodie' onChange={FilterByType}/> <span>Hoodie</span>
                 <br />
-                <input type="checkbox" /> <span>Basic</span>
+                <input type="checkbox" value='Basic' onChange={FilterByType}/> <span>Basic</span>
             </div>
 
         </div>

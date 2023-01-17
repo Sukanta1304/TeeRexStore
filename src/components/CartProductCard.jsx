@@ -1,7 +1,25 @@
-import React from 'react'
+import React from 'react';
+import { useContext } from 'react';
+import { CartContext } from '../context/CartContext';
 
 function CartProductCard({el,handleDelete}) {
-    const {id,imageURL,name,price,quantity}= el;
+    const {product,setProduct}= useContext(CartContext);
+    const {id,imageURL,name,price,quantity,availableqty}= el;
+
+    const handleQtyChange=(e)=>{
+        const payload= e.target.value;
+        let updatedqty = product.map((item) => {
+          if (item.id === id) {
+            return {
+              ...item,
+              quantity:Number(payload)
+            };
+          } else {
+            return item;
+          }
+        });
+        setProduct(updatedqty);
+    }
 
   return (
     <div style={{display:'flex',gap:'1rem'}}>
@@ -13,8 +31,10 @@ function CartProductCard({el,handleDelete}) {
             <h4 style={{margin:'0'}}>Rs {price}</h4>
         </div>
         <div style={{display:'flex', flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
-            <select disabled>
-                <option>{quantity}</option>
+            <select onChange={handleQtyChange} defaultValue={quantity}>
+                {new Array(availableqty).fill(0).map((qty,i)=>
+                <option value={i+1} key={i}>{i+1}</option>
+                )}
             </select>
         </div>
         <div style={{display:'flex', flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
